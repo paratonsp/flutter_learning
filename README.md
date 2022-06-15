@@ -18,3 +18,8 @@ samples, guidance on mobile development, and a full API reference.
 https://cdn.dribbble.com/users/408720/screenshots/15422812/media/dd0b38b7fd1c4b241525817766d3b5a6.jpg
 
 ![alt text]([http://url/to/img.png](https://cdn.dribbble.com/users/408720/screenshots/15422812/media/dd0b38b7fd1c4b241525817766d3b5a6.jpg))
+
+<p align="center">
+  <img src="https://cdn.dribbble.com/users/408720/screenshots/15422812/media/dd0b38b7fd1c4b241525817766d3b5a6.jpg" width="350" title="hover text">
+  <img src="https://cdn.dribbble.com/users/408720/screenshots/15422812/media/dd0b38b7fd1c4b241525817766d3b5a6.jpg" width="350" alt="accessibility text">
+</p>
