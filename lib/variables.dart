@@ -1,0 +1,13 @@
+//NIK Validators
+String name;
+String nik;
+String uniqueCode;
+String gender;
+String bornDate;
+String age;
+String nextBirthday;
+String zodiac;
+String province;
+String city;
+String subdistrict;
+String postalCode;
