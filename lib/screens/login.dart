@@ -1,10 +1,10 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nik_validator/nik_validator.dart';
 import 'package:pesoros_app/screens/menu.dart';
-import 'package:stockholm/stockholm.dart';
 import 'package:pesoros_app/variables.dart' as variable;
 
 class LoginScreen extends StatefulWidget {
@@ -19,8 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   getData() async {
     NIKModel result =
         await NIKValidator.instance.parse(nik: numberController.text);
-
-    print(result.valid);
+    print(result);
     if (result.valid) {
       setState(() {
         variable.name = nameController.text;
@@ -52,30 +51,53 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Nama"),
-            SizedBox(height: 5),
-            StockholmTextField(
+            Text("Name"),
+            SizedBox(height: 3.5),
+            CupertinoTextField(
               controller: nameController,
               keyboardType: TextInputType.name,
             ),
-            SizedBox(height: 10),
-            Text("NIK"),
-            SizedBox(height: 5),
-            StockholmTextField(
+            SizedBox(height: 15),
+            Text("Identity Number"),
+            SizedBox(height: 3.5),
+            CupertinoTextField(
               controller: numberController,
               keyboardType: TextInputType.number,
             ),
-            SizedBox(height: 20),
-            StockholmButton(
-              onPressed: () {
-                if (nameController.text == null || nameController.text == "") {
-                  Fluttertoast.showToast(msg: "Isi Nama!");
-                } else {
-                  getData();
-                }
-              },
-              child: Text("Lanjut"),
-              important: true,
+            SizedBox(height: 30),
+            Center(
+              child: CupertinoButton.filled(
+                onPressed: () {
+                  if (nameController.text == null ||
+                      nameController.text == "") {
+                    Fluttertoast.showToast(msg: "Isi Nama!");
+                  } else {
+                    if (numberController.text == "000") {
+                      setState(() {
+                        variable.name = nameController.text;
+                        variable.nik = "000";
+                        variable.uniqueCode = "000";
+                        variable.gender = "LAKI-LAKI";
+                        variable.bornDate = "09-09-1999";
+                        variable.age = "00 tahun, 00 bulan, 00 hari";
+                        variable.nextBirthday = "00 bulan, 6 hari lagi";
+                        variable.zodiac = "Libra";
+                        variable.province = "JAWA TIMUR";
+                        variable.city = "SURABAYA";
+                        variable.subdistrict = "SUKOMANUNGGAL";
+                        variable.postalCode = "60181";
+                      });
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => MenuScreen()));
+                    } else {
+                      getData();
+                    }
+                  }
+                },
+                child: Text("Next"),
+              ),
             ),
           ],
         ),
