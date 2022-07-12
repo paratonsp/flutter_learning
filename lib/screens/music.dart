@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:mini_music_visualizer/mini_music_visualizer.dart';
-import 'package:blur/blur.dart';
 
 class MusicScreen extends StatefulWidget {
   @override

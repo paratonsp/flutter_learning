@@ -10,6 +10,7 @@ import 'package:pesoros_app/screens/financial.dart';
 import 'package:pesoros_app/screens/health.dart';
 import 'package:pesoros_app/screens/library.dart';
 import 'package:pesoros_app/screens/music.dart';
+import 'package:pesoros_app/screens/news.dart';
 import 'package:pesoros_app/variables.dart' as variable;
 import 'package:http/http.dart' as http;
 
@@ -312,46 +313,6 @@ class _MenuScreenState extends State<MenuScreen> {
                       SizedBox(height: 15),
                       _listMenu(
                         context,
-                        "Library",
-                        Icon(
-                          Icons.book,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                        () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LibraryScreen()),
-                          );
-                        },
-                      ),
-                      Divider(
-                        thickness: 1,
-                        color: Colors.grey.withOpacity(0.2),
-                      ),
-                      _listMenu(
-                        context,
-                        "Financial",
-                        Icon(
-                          Icons.attach_money,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                        () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => FinancialScreen()),
-                          );
-                        },
-                      ),
-                      Divider(
-                        thickness: 1,
-                        color: Colors.grey.withOpacity(0.2),
-                      ),
-                      _listMenu(
-                        context,
                         "Calendar",
                         Icon(
                           Icons.calendar_month,
@@ -392,6 +353,26 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                       _listMenu(
                         context,
+                        "Financial",
+                        Icon(
+                          Icons.attach_money,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FinancialScreen()),
+                          );
+                        },
+                      ),
+                      Divider(
+                        thickness: 1,
+                        color: Colors.grey.withOpacity(0.2),
+                      ),
+                      _listMenu(
+                        context,
                         "Health",
                         Icon(
                           Icons.health_and_safety,
@@ -423,6 +404,46 @@ class _MenuScreenState extends State<MenuScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => MusicScreen()),
+                          );
+                        },
+                      ),
+                      Divider(
+                        thickness: 1,
+                        color: Colors.grey.withOpacity(0.2),
+                      ),
+                      _listMenu(
+                        context,
+                        "News",
+                        Icon(
+                          Icons.newspaper,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NewsScreen()),
+                          );
+                        },
+                      ),
+                      Divider(
+                        thickness: 1,
+                        color: Colors.grey.withOpacity(0.2),
+                      ),
+                      _listMenu(
+                        context,
+                        "Library",
+                        Icon(
+                          Icons.book,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LibraryScreen()),
                           );
                         },
                       ),
