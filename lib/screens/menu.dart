@@ -9,6 +9,7 @@ import 'package:pesoros_app/screens/dictionary.dart';
 import 'package:pesoros_app/screens/financial.dart';
 import 'package:pesoros_app/screens/health.dart';
 import 'package:pesoros_app/screens/library.dart';
+import 'package:pesoros_app/screens/music.dart';
 import 'package:pesoros_app/variables.dart' as variable;
 import 'package:http/http.dart' as http;
 
@@ -402,6 +403,26 @@ class _MenuScreenState extends State<MenuScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => HealthScreen()),
+                          );
+                        },
+                      ),
+                      Divider(
+                        thickness: 1,
+                        color: Colors.grey.withOpacity(0.2),
+                      ),
+                      _listMenu(
+                        context,
+                        "Music",
+                        Icon(
+                          Icons.music_note,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MusicScreen()),
                           );
                         },
                       ),

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, avoid_print, prefer_const_literals_to_create_immutables, non_constant_identifier_names, unnecessary_this, prefer_collection_literals, unnecessary_new, unused_element, prefer_is_empty, unused_import, prefer_final_fields, prefer_adjacent_string_concatenation, prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, avoid_print, prefer_const_literals_to_create_immutables, non_constant_identifier_names, unnecessary_this, prefer_collection_literals, unnecessary_new, unused_element, prefer_is_empty, unused_import, prefer_final_fields, prefer_adjacent_string_concatenation, prefer_typing_uninitialized_variables, unused_local_variable
 
 import 'dart:convert';
 import 'package:intl/intl.dart';
@@ -13,29 +13,6 @@ import 'package:syncfusion_flutter_maps/maps.dart';
 class HealthScreen extends StatefulWidget {
   @override
   State<HealthScreen> createState() => _HealthScreenState();
-}
-
-class Arti {
-  String kelas_kata;
-  String deskripsi;
-
-  Arti({
-    this.kelas_kata,
-    this.deskripsi,
-  });
-
-  Arti.fromJson(Map<String, dynamic> json) {
-    kelas_kata = json['kelas_kata'];
-    deskripsi = json["deskripsi"];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['kelas_kata'] = this.kelas_kata;
-    data['deskripsi'] = this.deskripsi;
-
-    return data;
-  }
 }
 
 class Model {
@@ -65,10 +42,10 @@ class _HealthScreenState extends State<HealthScreen> {
   bool loadData = true;
   bool loadImage = true;
   List<Model> _data = [];
+  List imageList = [];
   MapShapeSource _mapMainLayer;
   MapShapeSource _mapSubLayer;
   String lastUpdate;
-  String imageLink;
   var avgKasus;
   var defaultCity = 0;
 
@@ -108,9 +85,9 @@ class _HealthScreenState extends State<HealthScreen> {
       ));
     }
     setState(() {
-      _mapMainLayer = MapShapeSource.asset('assets/asia.json');
+      _mapMainLayer = MapShapeSource.asset('assets/asia_oceanic_90.json');
       _mapSubLayer = MapShapeSource.asset(
-        'assets/indonesia.json',
+        'assets/indonesia_10.json',
         shapeDataField: 'Propinsi',
         dataCount: _data.length,
         primaryValueMapper: (int index) => _data[index].state,
@@ -126,10 +103,15 @@ class _HealthScreenState extends State<HealthScreen> {
 
   getImage(int intImage) async {
     final response = await http.get(Uri.parse(
-        "https://api.unsplash.com/search/photos?client_id=Brj99O62zS6VJYxFCCwJy_UfoxmoTnIz-W-93EgCcKc&page=1&per_page=340&query=indonesia"));
+        "https://api.unsplash.com/search/photos?client_id=Brj99O62zS6VJYxFCCwJy_UfoxmoTnIz-W-93EgCcKc&page=1&per_page=34&query=indonesia"));
+
+    List temp = [];
+    for (var data in jsonDecode(response.body)['results'] as List) {
+      temp.add(
+          jsonDecode(response.body)['results'][intImage]['urls']['regular']);
+    }
     setState(() {
-      imageLink =
-          jsonDecode(response.body)['results'][intImage]['urls']['regular'];
+      imageList = temp;
       loadImage = false;
     });
   }
@@ -164,10 +146,10 @@ class _HealthScreenState extends State<HealthScreen> {
                         source: _mapMainLayer,
                         zoomPanBehavior: MapZoomPanBehavior(
                           focalLatLng: MapLatLng(-2.6000285, 118.015776),
-                          zoomLevel: 1,
+                          zoomLevel: 3.5,
                         ),
                         strokeColor: Theme.of(context).scaffoldBackgroundColor,
-                        strokeWidth: 0.2,
+                        strokeWidth: 0,
                         sublayers: [
                           MapShapeSublayer(
                             source: _mapSubLayer,
@@ -240,7 +222,7 @@ class _HealthScreenState extends State<HealthScreen> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(8.0),
                                       child: Image.network(
-                                        imageLink,
+                                        imageList[defaultCity],
                                         fit: BoxFit.cover,
                                       ),
                                     ),

@@ -21,6 +21,9 @@ dependencies:
   calendar_view: ^0.0.5
   syncfusion_flutter_maps: 20.1.47
   syncfusion_flutter_core: 20.1.47
+  assets_audio_player: 3.0.4
+  mini_music_visualizer: ^1.0.2
+  blur: ^3.1.0
 
 dev_dependencies:
   flutter_test:
@@ -32,8 +35,6 @@ flutter:
 
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
   assets:
-    - indonesia.json
-    - asia.json
+    - assets/
 
