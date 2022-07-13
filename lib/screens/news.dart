@@ -120,26 +120,26 @@ class _NewsScreenState extends State<NewsScreen>
                             ),
                           ),
                           SizedBox(height: 15),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: 150,
-                            child: ListView.builder(
-                              physics: BouncingScrollPhysics(),
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 1,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Row(
-                                  children: [
-                                    for (int i = 0;
-                                        i < categoryNews.length;
-                                        i++) ...[
-                                      _sliderWidget(),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15.0),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: 150,
+                              child: ListView.builder(
+                                physics: BouncingScrollPhysics(),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: listNews[1].length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Row(
+                                    children: [
+                                      _sliderWidget(
+                                          listNews[1], listNews[1].length - 1),
                                       SizedBox(width: 15),
                                     ],
-                                  ],
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                           ),
                           SizedBox(height: 15),
@@ -198,50 +198,35 @@ class _NewsScreenState extends State<NewsScreen>
     );
   }
 
-  _sliderWidget() {
+  _sliderWidget(List news, int index) {
+    News tempNews = news[index];
     return Container(
       width: 200,
       height: 150,
       decoration: BoxDecoration(
-          color: Colors.white,
+          image: DecorationImage(
+              colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.7),
+                BlendMode.dstATop,
+              ),
+              image: NetworkImage(tempNews.imageUrlNews),
+              fit: BoxFit.cover),
           borderRadius: BorderRadius.all(Radius.circular(15))),
       child: Padding(
         padding: EdgeInsets.all(15),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              children: [
-                Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                      color: Colors.blueAccent,
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  child: Icon(
-                    Icons.star,
-                    size: 18,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(width: 15),
-                Text(
-                  "variable",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blueAccent),
-                ),
-              ],
-            ),
-            SizedBox(height: 15),
             Text(
-              "zodiacDescription",
-              maxLines: 5,
+              tempNews.titleNews,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
               style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
-                  overflow: TextOverflow.ellipsis),
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
           ],
         ),
@@ -406,13 +391,14 @@ class NewDetailNewsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 10, 10, 10),
+      backgroundColor: Colors.white,
       body: CustomScrollView(
         physics: BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
+            // leading: Container(),
             expandedHeight: MediaQuery.of(context).size.height / 1.5,
-            backgroundColor: Color.fromARGB(255, 10, 10, 10),
+            backgroundColor: Colors.white,
             pinned: true,
             stretch: true,
             flexibleSpace: FlexibleSpaceBar(
@@ -423,7 +409,7 @@ class NewDetailNewsWidget extends StatelessWidget {
                     return LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.black, Colors.transparent],
+                      colors: [Colors.white, Colors.transparent],
                     ).createShader(
                         Rect.fromLTRB(0, 0, rect.width, rect.height));
                   },
@@ -454,7 +440,7 @@ class NewDetailNewsWidget extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                            color: Colors.black),
                       ),
                     ),
                     Padding(
@@ -468,14 +454,14 @@ class NewDetailNewsWidget extends StatelessWidget {
                               style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                                  color: Colors.black),
                             ),
                             Text(
                               dateNews,
                               style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                                  color: Colors.black),
                             ),
                           ]),
                     ),
@@ -485,7 +471,7 @@ class NewDetailNewsWidget extends StatelessWidget {
                       child: Text(
                         contentNews,
                         maxLines: 999,
-                        style: TextStyle(fontSize: 12, color: Colors.white),
+                        style: TextStyle(fontSize: 12, color: Colors.black),
                       ),
                     ),
                   ],
