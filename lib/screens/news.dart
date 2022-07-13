@@ -31,12 +31,22 @@ class NewsScreen extends StatefulWidget {
 class _NewsScreenState extends State<NewsScreen>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
-  List categoryNews = ['business', 'sports', 'technology'];
-  List<News> businessNews = [];
-  List<News> sportsNews = [];
-  List<News> technologyNews = [];
+  List categoryNews = [
+    'business',
+    'sports',
+    'world',
+    'politics',
+    'technology',
+    'startup',
+    'entertainment',
+    'miscellaneous',
+    'hatke',
+    'science',
+    'automobile'
+  ];
+  List<List<News>> listNews = [];
 
-  getNews(String category) async {
+  getNews(String category, int index) async {
     final response = await http
         .get(Uri.parse("https://inshorts.deta.dev/news?category=$category"));
 
@@ -53,16 +63,17 @@ class _NewsScreenState extends State<NewsScreen>
       );
     }
     setState(() {
-      businessNews = temp;
+      listNews[index] = temp;
     });
   }
 
   @override
   void initState() {
+    listNews = List.generate(categoryNews.length, (i) => []);
     for (var i = 0; i < categoryNews.length; i++) {
-      getNews("p");
+      getNews(categoryNews[i], i);
     }
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: categoryNews.length, vsync: this);
     super.initState();
   }
 
@@ -84,68 +95,153 @@ class _NewsScreenState extends State<NewsScreen>
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.only(top: 30, left: 30, right: 30, bottom: 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              Jiffy(DateTime.now()).format("EEEE MMMM do"),
-              style: TextStyle(
-                fontSize: 12,
-              ),
-            ),
-            SizedBox(height: 7),
-            Text(
-              "Daily feed",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 15),
-            TabBar(
-              controller: _tabController,
-              overlayColor: MaterialStateProperty.all(Colors.white),
-              indicator: BoxDecoration(
-                borderRadius: BorderRadius.circular(
-                  15.0,
-                ),
-                color: Colors.blueAccent,
-              ),
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.black,
-              tabs: [
-                SizedBox(
-                  height: 30,
-                  child: Tab(
-                    text: "Business",
+          padding: EdgeInsets.only(top: 30, left: 30, right: 30, bottom: 0),
+          child: NestedScrollView(
+            headerSliverBuilder: (context, value) {
+              return [
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            Jiffy(DateTime.now()).format("EEEE MMMM do"),
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                          SizedBox(height: 7),
+                          Text(
+                            "Daily feed",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 15),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: 150,
+                            child: ListView.builder(
+                              physics: BouncingScrollPhysics(),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 1,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Row(
+                                  children: [
+                                    for (int i = 0;
+                                        i < categoryNews.length;
+                                        i++) ...[
+                                      _sliderWidget(),
+                                      SizedBox(width: 15),
+                                    ],
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                          SizedBox(height: 15),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15.0),
+                            child: SizedBox(
+                              child: TabBar(
+                                physics: BouncingScrollPhysics(),
+                                isScrollable: true,
+                                controller: _tabController,
+                                overlayColor:
+                                    MaterialStateProperty.all(Colors.white),
+                                indicator: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  color: Colors.blueAccent,
+                                ),
+                                labelColor: Colors.white,
+                                unselectedLabelColor: Colors.black,
+                                tabs: [
+                                  for (int i = 0;
+                                      i < categoryNews.length;
+                                      i++) ...[
+                                    SizedBox(
+                                      height: 30,
+                                      child: Tab(
+                                        text: categoryNews[i]
+                                            .toString()
+                                            .toUpperCase(),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 15),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(
-                  height: 30,
-                  child: Tab(
-                    text: "Sports",
-                  ),
-                ),
-                SizedBox(
-                  height: 30,
-                  child: Tab(
-                    text: "Technology",
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 15),
-            Expanded(
+              ];
+            },
+            body: SizedBox(
               child: TabBarView(
                 physics: BouncingScrollPhysics(),
                 controller: _tabController,
                 children: [
-                  ListNewsWidget(businessNews),
-                  ListNewsWidget(sportsNews),
-                  ListNewsWidget(technologyNews),
+                  for (int i = 0; i < categoryNews.length; i++) ...[
+                    ListNewsWidget(listNews[i]),
+                  ]
                 ],
               ),
+            ),
+          )),
+    );
+  }
+
+  _sliderWidget() {
+    return Container(
+      width: 200,
+      height: 150,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15))),
+      child: Padding(
+        padding: EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  child: Icon(
+                    Icons.star,
+                    size: 18,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(width: 15),
+                Text(
+                  "variable",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueAccent),
+                ),
+              ],
+            ),
+            SizedBox(height: 15),
+            Text(
+              "zodiacDescription",
+              maxLines: 5,
+              style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 12,
+                  overflow: TextOverflow.ellipsis),
             ),
           ],
         ),
@@ -179,14 +275,17 @@ class ListNewsWidget extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      SizedBox(
-                        height: 70,
-                        width: 70,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(7),
-                          child: Image.network(
-                            news.imageUrlNews,
-                            fit: BoxFit.cover,
+                      Hero(
+                        tag: news.imageUrlNews,
+                        child: SizedBox(
+                          height: 70,
+                          width: 70,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(7),
+                            child: Image.network(
+                              news.imageUrlNews,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
@@ -317,18 +416,22 @@ class NewDetailNewsWidget extends StatelessWidget {
             pinned: true,
             stretch: true,
             flexibleSpace: FlexibleSpaceBar(
-              background: ShaderMask(
-                shaderCallback: (rect) {
-                  return LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.black, Colors.transparent],
-                  ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
-                },
-                blendMode: BlendMode.dstIn,
-                child: Image.network(
-                  imageUrlNews,
-                  fit: BoxFit.cover,
+              background: Hero(
+                tag: imageUrlNews,
+                child: ShaderMask(
+                  shaderCallback: (rect) {
+                    return LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.black, Colors.transparent],
+                    ).createShader(
+                        Rect.fromLTRB(0, 0, rect.width, rect.height));
+                  },
+                  blendMode: BlendMode.dstIn,
+                  child: Image.network(
+                    imageUrlNews,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               stretchModes: [
