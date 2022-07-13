@@ -31,13 +31,14 @@ class NewsScreen extends StatefulWidget {
 class _NewsScreenState extends State<NewsScreen>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+  List categoryNews = ['business', 'sports', 'technology'];
   List<News> businessNews = [];
   List<News> sportsNews = [];
   List<News> technologyNews = [];
 
-  getBusinessNews() async {
+  getNews(String category) async {
     final response = await http
-        .get(Uri.parse("https://inshorts.deta.dev/news?category=business"));
+        .get(Uri.parse("https://inshorts.deta.dev/news?category=$category"));
 
     List<News> temp = [];
     for (var data in jsonDecode(response.body)['data'] as List) {
@@ -56,53 +57,11 @@ class _NewsScreenState extends State<NewsScreen>
     });
   }
 
-  getSportsNews() async {
-    final response = await http
-        .get(Uri.parse("https://inshorts.deta.dev/news?category=sports"));
-
-    List<News> temp = [];
-    for (var data in jsonDecode(response.body)['data'] as List) {
-      temp.add(
-        News(
-          data['author'],
-          data['content'],
-          data['date'],
-          data['imageUrl'],
-          data['title'],
-        ),
-      );
-    }
-    setState(() {
-      sportsNews = temp;
-    });
-  }
-
-  getTechnologyNews() async {
-    final response = await http
-        .get(Uri.parse("https://inshorts.deta.dev/news?category=technology"));
-
-    List<News> temp = [];
-    for (var data in jsonDecode(response.body)['data'] as List) {
-      temp.add(
-        News(
-          data['author'],
-          data['content'],
-          data['date'],
-          data['imageUrl'],
-          data['title'],
-        ),
-      );
-    }
-    setState(() {
-      technologyNews = temp;
-    });
-  }
-
   @override
   void initState() {
-    getBusinessNews();
-    getSportsNews();
-    getTechnologyNews();
+    for (var i = 0; i < categoryNews.length; i++) {
+      getNews("p");
+    }
     _tabController = TabController(length: 3, vsync: this);
     super.initState();
   }
@@ -327,121 +286,6 @@ class ListNewsWidget extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class DetailNewsWidget extends StatelessWidget {
-  DetailNewsWidget(
-    this.authorNews,
-    this.contentNews,
-    this.dateNews,
-    this.imageUrlNews,
-    this.titleNews,
-  );
-  String authorNews = "";
-  String contentNews = "";
-  String dateNews = "";
-  String imageUrlNews = "";
-  String titleNews = "";
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 10, 10, 10),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                Stack(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 1.2,
-                      width: MediaQuery.of(context).size.width,
-                      child: ShaderMask(
-                        shaderCallback: (rect) {
-                          return LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Colors.black, Colors.transparent],
-                          ).createShader(
-                              Rect.fromLTRB(0, 0, rect.width, rect.height));
-                        },
-                        blendMode: BlendMode.dstIn,
-                        child: Image.network(
-                          imageUrlNews,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 30, right: 30, top: 0, bottom: 0),
-                          child: Text(
-                            titleNews,
-                            maxLines: 99,
-                            style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Author: " + authorNews,
-                          style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                        Text(
-                          dateNews,
-                          style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                      ]),
-                ),
-                Padding(
-                    padding: EdgeInsets.only(
-                        left: 30, right: 30, top: 30, bottom: 0),
-                    child: Text(
-                      contentNews,
-                      maxLines: 999,
-                      style: TextStyle(fontSize: 12, color: Colors.white),
-                    )),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.all(30),
-              child: GestureDetector(
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
